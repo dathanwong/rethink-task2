@@ -62,7 +62,5 @@ module.exports.update = (req, res) =>{
 
 module.exports.getSuggestions = (req, res) =>{
     const results = ts.get(req.body.search);
-    console.log(req.body);
-    console.log(results);
     res.json(results);
 }
