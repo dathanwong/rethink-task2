@@ -2,16 +2,38 @@ import React from 'react';
 import { useState } from 'react';
 import Autocomplete from 'react-autocomplete';
 import Axios from 'axios';
+import { useEffect } from 'react';
 
 const Home = (props) => {
 
     const [value, setValue] = useState("");
     const [items, setItems] = useState([]);
+    const [page, setPage] = useState(0);
+    const [pageItems, setPageItems] = useState([]);
+
+    useEffect(() =>{
+        Axios.get('http://localhost:8000/api/data/page/'+page)
+            .then((results) =>{
+                console.log(results.data);
+                setPageItems(results.data);
+            })
+            .catch(err =>{
+                console.log(err);
+            })
+    }, [page])
 
     //Handle the search
     function handleSubmit(e){
         e.preventDefault();
         console.log("Submit clicked");
+    }
+
+    function nextPage(){
+        setPage(page+1);
+    }
+
+    function prevPage(){
+        if(page > 0) setPage(page-1);
     }
 
     //Get new autocomplete options
@@ -28,24 +50,48 @@ const Home = (props) => {
 
     return (
         <div className="container">
-            <form onSubmit={handleSubmit}>
-                <div className="row my-3">
-                    <Autocomplete
-                        className="col-8"
-                        getItemValue={(item) => item.name}
-                        items={items}
-                        renderItem={(item, isHighlighted) =>
-                            <div style={{ background: isHighlighted ? 'lightgray' : 'white' }}>
-                            {item.name}
-                            </div>
-                        }
-                        value={value}
-                        onChange={(e) => onChangeHandler(e)}
-                        onSelect={(val) => setValue(val)}
-                    />
-                    <button className="col-2 btn btn-primary" type="submit">Search</button>
-                </div>
-            </form>
+            <div className="row my-3">
+                <form className="col" onSubmit={handleSubmit}>
+                        <Autocomplete
+                            getItemValue={(item) => item.name}
+                            items={items}
+                            renderItem={(item, isHighlighted) =>
+                                <div style={{ background: isHighlighted ? 'lightgray' : 'white' }}>
+                                {item.name}
+                                </div>
+                            }
+                            value={value}
+                            onChange={(e) => onChangeHandler(e)}
+                            onSelect={(val) => setValue(val)}
+                        />
+                        <button className="btn btn-primary" type="submit">Search</button>
+                </form>
+            </div>
+            <div className="row my-3">
+                <table className="table table-bordered table-striped">
+                    <thead>
+                        <th>Data</th>
+                    </thead>
+                    <tbody>
+                    {
+                        pageItems.map((data) => 
+                            <tr>
+                                <td>{data.name}</td>
+                            </tr>
+                        )
+                    }
+                    </tbody>
+                </table>
+            </div>
+            <div className="row my-3 justify-content-between">
+                {
+                    page > 0 ? <button onClick={prevPage} className="col-1 btn btn-secondary">Prev</button> : <button className="col-1 btn btn-secondary" disabled>Prev</button>
+                }
+                {
+                    pageItems.length === 0 ? <button disabled onClick={nextPage} className="col-1 btn btn-secondary">Next</button> : <button onClick={nextPage} className="col-1 btn btn-secondary">Next</button>
+                }
+                
+            </div>
         </div> 
         
         

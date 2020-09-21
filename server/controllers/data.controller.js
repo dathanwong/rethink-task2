@@ -54,7 +54,7 @@ module.exports.delete = (req, res) =>{
 module.exports.update = (req, res) =>{
     Data.updateOne({_id: req.params.id}, req.body, {new:true, runValidators: true})
         .then(result =>{
-            initTrie()
+            initTrie();
             res.json(result);
         })
         .catch(err => res.status(400).json(err));
