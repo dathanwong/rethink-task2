@@ -64,3 +64,17 @@ module.exports.getSuggestions = (req, res) =>{
     const results = ts.get(req.body.search);
     res.json(results);
 }
+
+module.exports.getByPage = (req, res) =>{
+    Data.find().collation({locale:'en',strength: 2}).sort({name:1})
+    .then( (results) =>{ 
+        let resultsPerPage = 2;
+        let start = req.params.page*resultsPerPage;
+        let end = start + resultsPerPage;
+        let output = results.slice(start, end);
+        res.json(output);
+    })
+    .catch(err =>{
+        res.json(err);
+    });
+}
