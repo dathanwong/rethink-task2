@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Autocomplete from 'react-autocomplete';
 import Axios from 'axios';
 import { useEffect } from 'react';
+import { Link } from '@reach/router';
 
 const Home = (props) => {
 
@@ -70,13 +71,17 @@ const Home = (props) => {
             <div className="row my-3">
                 <table className="table table-bordered table-striped">
                     <thead>
-                        <th>Data</th>
+                        <tr>
+                            <th>Data</th>
+                        </tr>
                     </thead>
                     <tbody>
                     {
                         pageItems.map((data) => 
                             <tr>
-                                <td>{data.name}</td>
+                                <td>
+                                    <Link to={"/"+data._id}>{data.name}</Link>
+                                </td>
                             </tr>
                         )
                     }
