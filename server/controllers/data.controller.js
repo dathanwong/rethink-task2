@@ -33,6 +33,14 @@ module.exports.findById =(req, res)=>{
         .catch(err => res.json(err));
 }
 
+module.exports.findByName = (req, res) =>{
+    Data.findOne({name: req.params.name})
+        .then(results =>{
+            res.json(results);
+        })
+        .catch(err => res.json(err));
+}
+
 module.exports.create = (req, res) =>{
     Data.create(req.body)
         .then(result =>{

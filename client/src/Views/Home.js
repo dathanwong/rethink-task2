@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Autocomplete from 'react-autocomplete';
 import Axios from 'axios';
 import { useEffect } from 'react';
-import { Link } from '@reach/router';
+import { Link, navigate } from '@reach/router';
 
 const Home = (props) => {
 
@@ -26,7 +26,15 @@ const Home = (props) => {
     //Handle the search
     function handleSubmit(e){
         e.preventDefault();
-        console.log("Submit clicked");
+        Axios.get('http://localhost:8000/api/data/name/'+value)
+            .then((result) =>{
+                console.log(result);
+                if(result.data != null){
+                    navigate('http://localhost:3000/'+result.data._id);
+                }else{
+                    alert("Data not found");
+                }
+            })
     }
 
     function nextPage(){
