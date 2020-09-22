@@ -76,7 +76,7 @@ module.exports.getSuggestions = (req, res) =>{
 module.exports.getByPage = (req, res) =>{
     Data.find().collation({locale:'en',strength: 2}).sort({name:1})
     .then( (results) =>{ 
-        let resultsPerPage = 2;
+        let resultsPerPage = 20;
         let start = req.params.page*resultsPerPage;
         let end = start + resultsPerPage;
         let output = results.slice(start, end);
